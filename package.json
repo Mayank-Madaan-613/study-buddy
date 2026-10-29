@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "dotenv": "^18.0.9",
     "framer-motion": "^11.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
