@@ -1,151 +1,215 @@
 # 🎓 StudySpace (Study-Buddy)
 
-An elegant, glassmorphic productivity dashboard designed to supercharge your study sessions. **StudySpace** unifies essential academic and productivity tools—including a science-backed Pomodoro focus timer, consistency-driven habit tracker, dynamic progress analytics, and a real-time **Gemini-powered AI Study Tutor**—into a cohesive, modern workspace.
+<div align="center">
 
-Built with a dark-mode glassmorphic UI, responsive layout, fluid Framer Motion animations, and local storage persistence.
+![React](https://img.shields.io/badge/React-18.2.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Google Gemini](https://img.shields.io/badge/Google_Gemini-3.5_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)
+![Framer Motion](https://img.shields.io/badge/Framer_Motion-11.0-FF0055?style=for-the-badge&logo=framer&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)
 
----
+<p align="center">
+  <strong>An elegant, glassmorphic productivity dashboard designed to supercharge your study sessions.</strong>
+  <br />
+  StudySpace unifies a science-backed focus timer, consistency-driven habit tracking, interactive progress analytics, and a real-time Gemini-powered AI Study Tutor into a single high-performance workspace.
+</p>
 
-## ✨ Features
-
-### 💬 Real-Time AI StudyBot (Powered by Google Gemini)
-* **Live AI Tutor:** Integrated with Google Gemini models (`gemini-3.5-flash` with automatic fallback to `gemini-3.1-flash-lite` and `gemini-flash-latest`) for pedagogical explanations.
-* **Multi-Turn Context Memory:** Remembers previous conversation context throughout your study session.
-* **Dedicated Study Utility Presets:**
-  * 🎯 **Quiz Me:** Instantly creates 3-question active recall multiple-choice quizzes with detailed answer rationales.
-  * 💡 **Explain Like I'm 12:** Breaks down complex academic concepts using the Feynman Technique and real-world analogies.
-  * 📅 **7-Day Study Plan:** Formulates actionable, step-by-step revision schedules with scheduled Pomodoro focus blocks.
-  * 📝 **Key Summary:** Condenses notes, formulas, and textbook excerpts into high-yield takeaways.
-* **Non-Lossy Markdown Engine:** Full support for syntax-highlighted code blocks, bold headings, bullet lists, and numbered steps with 1-click clipboard copy.
-* **Resilient Architecture:** 20-second timeout control (`AbortController`), in-app "Stop" generation button, and graceful rate-limit handling.
-
-### ⏱️ Persistent Focus Pomodoro Timer
-* **Global Background Execution:** Built on a unified `StudyContext`—the timer continues running seamlessly even when switching between Dashboard, Habits, or AI Chat views.
-* **Tab Countdown Title:** Browser tab title dynamically updates in real-time with your remaining session time (e.g. `(24:45) 🎯 Focus | StudySpace`).
-* **Session Task Tagging:** Enter what you're working on (e.g., *Programming*, *Calculus*, *Review Notes*). Completed sessions are automatically logged to your Recent Activity feed.
-* **Synthesized Audio Chimes:** Uses the Web Audio API to play gentle, harmonic marimba chimes upon completion (no external MP3 assets, 100% offline-ready).
-* **Sidebar Mini-Controller:** Control your focus session from anywhere in the application.
-* **Custom Presets & Settings:** Customize Focus, Short Break, and Long Break durations via the timer settings modal.
-
-### 📅 Interactive Habit Tracker
-* **Zero-Interruption Modals:** Custom glassmorphic modals for creating new habits and confirming deletions (no native browser prompts).
-* **Weekly Consistency Grid:** Interactive Sunday-to-Saturday checklist with an active glowing highlight on today's current day.
-* **Streak & Goal Tracking:** Live streak counters (`🔥 X-Day Streak`) and visual percentage progress bars towards weekly targets.
-* **Category Tagging:** Organize habits across *Learning*, *Study*, *Health*, *Wellness*, and *Coding*.
-* **Behavioral AI Insights:** Research-backed habit stacking recommendations.
-
-### 📊 Dynamic Analytics & Dashboard
-* **Real-Time Metrics:** Live computation of Total Study Hours, Tasks Completed, Pomodoro Sprints, and Focus Benchmark Scores.
-* **Interactive Weekly Chart:** Visual day-by-day distribution of study hours powered by Recharts with custom tooltips and gradient styling (*This Week* vs. *Last Week*).
-* **Today's Habit Quick-Check:** Mark off today's habits directly from the dashboard without navigating away.
-* **Filterable Activity Feed:** Real-time log of focus sessions and habit completions, filterable by *All*, *Study*, and *Habits*.
+</div>
 
 ---
 
-## 🛠️ Technology Stack
+## 🌟 What's New in the Latest Release
 
-* **Framework:** [React 18](https://react.dev/) + [Vite 5](https://vitejs.dev/)
-* **AI Engine:** [Google Gemini API](https://ai.google.dev/) via `@google/generative-ai` & native REST fallback
-* **Styling:** [Tailwind CSS 3](https://tailwindcss.com/) with custom glassmorphism and ambient glow effects
-* **Animations:** [Framer Motion](https://www.framer.com/motion/) for view transitions, tabs, and interactive modals
-* **Data Visualization:** [Recharts](https://recharts.org/) for study analytics
-* **Audio:** Web Audio API synthesized harmonic oscillators
-* **Environment Configuration:** `dotenv` + Vite `define`
+* 🧠 **Live Gemini AI Tutor Integration:** Powered by Google's `gemini-3.5-flash` model with automatic fallback to `gemini-3.1-flash-lite` and `gemini-flash-latest`. Features multi-turn conversational memory and 4,096-token output support.
+* 🛠️ **One-Click Active Recall Tools:** Instant presets for generating 3-question quizzes, Feynman technique simplifications, 7-day revision plans, and summary notes.
+* ⏱️ **Persistent Background Focus Timer:** The timer runs in a global `StudyContext`—it never resets or interrupts when navigating between views.
+* 🔔 **Web Audio Harmonic Synthesizer:** Gentle, polyphonic marimba chimes synthesized via the Web Audio API upon timer completion and habit check-offs (100% offline, zero audio asset downloads).
+* 📑 **Live Browser Tab Countdown:** Dynamic document title updates with your active countdown (e.g. `(24:45) 🎯 Focus | StudySpace`).
+* 🎨 **Interactive Glassmorphic Modals:** Replaced native browser `prompt()` and `confirm()` dialogs with custom Framer Motion modal windows.
+* 📊 **Smart Dashboard Quick-Actions:** Check off today's habits directly from the analytics dashboard and start focus sessions in one click.
+* 🍞 **Floating Toast Notifications:** Celebratory animated feedback toasts for completed sessions, goal milestones, and user actions.
 
 ---
 
-## 📁 Project Structure
+## 🏗️ System Architecture & Data Flow
 
 ```text
-STUDY-BUDDY/
-├── public/
-│   └── favicon.jpg           # Application favicon
-├── src/
-│   ├── components/
-│   │   ├── Button.jsx        # Motion-enabled accessible buttons
-│   │   ├── Card.jsx          # Glassmorphic card container
-│   │   ├── Icons.jsx         # Custom SVG Heroicons-style icons
-│   │   ├── Layout.jsx        # Responsive sidebar, navigation & mini-player
-│   │   └── ToastContainer.jsx # Toast notification alert stack
-│   ├── context/
-│   │   └── StudyContext.jsx  # Global state, timer engine, & localStorage sync
-│   ├── services/
-│   │   └── gemini.js         # Gemini API client, fallbacks, & study utilities
-│   ├── utils/
-│   │   └── sound.js          # Web Audio API notification chimes
-│   ├── views/
-│   │   ├── Home.jsx          # Welcome view & feature overview
-│   │   ├── Dashboard.jsx     # Analytics, charts, & quick checklist
-│   │   ├── Pomodoro.jsx      # Focus timer with customizable presets
-│   │   ├── Habits.jsx        # Weekly habit tracker & category filters
-│   │   └── Chat.jsx          # AI StudyBot interface & prompt tools
-│   ├── App.jsx               # Root provider & view routing
-│   ├── index.css             # Tailwind base, utilities & glass-panel styling
-│   └── main.jsx              # Application DOM entry point
-├── .env                      # Local environment variables (API keys)
-├── .gitignore                # Excludes .env, dist, and node_modules
-├── index.html                # HTML entry point with Inter font
-├── package.json              # Project dependencies & scripts
-├── tailwind.config.js        # Custom palette & typography configuration
-└── vite.config.js            # Vite build configuration with dotenv loading
+┌────────────────────────────────────────────────────────────────────────┐
+│                              StudySpace                                │
+│                         (Vite + React 18 SPA)                          │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                  ┌─────────────────┴─────────────────┐
+                  ▼                                   ▼
+        ┌───────────────────┐               ┌───────────────────┐
+        │   StudyContext    │               │   Gemini Engine   │
+        │  (Global State)   │               │   (gemini.js)     │
+        └─────────┬─────────┘               └─────────┬─────────┘
+                  │                                   │
+      ┌───────────┼───────────┐                       │
+      ▼           ▼           ▼                       ▼
+ ┌─────────┐ ┌─────────┐ ┌─────────┐         ┌───────────────────┐
+ │ Pomodoro│ │ Habits  │ │Activity │         │ Google Gemini API │
+ │  Timer  │ │ Tracker │ │  Logs   │         │ (Multi-turn chat, │
+ └────┬────┘ └────┬────┘ └────┬────┘         │  Study Utilities) │
+      │           │           │              └───────────────────┘
+      └───────────┼───────────┘
+                  ▼
+       ┌─────────────────────┐
+       │ Browser LocalStorage│
+       │ (Persistent Sync)   │
+       └─────────────────────┘
 ```
 
 ---
 
-## 🚀 Getting Started
+## ✨ Comprehensive Feature Matrix
+
+### 💬 1. AI StudyBot (Google Gemini Powered)
+* **Pedagogical Instruction System:** Tuned with custom study-partner system instructions to deliver step-by-step guidance, analogies, and active recall tests.
+* **Non-Lossy Markdown Engine:** Full custom parsing for multi-line code blocks (` ``` `), numbered question sequences (`1. `), bullet points, and inline styling without dropped text.
+* **Active Recall Utilities:**
+  * 🎯 **Quiz Me:** Creates 3-question multiple-choice quizzes with explanations.
+  * 💡 **Explain Like I'm 12:** Breaks down tough topics using the Feynman Technique.
+  * 📅 **7-Day Study Plan:** Outlines daily Pomodoro-aligned study roadmaps.
+  * 📝 **Key Summary:** Extracts high-yield formulas and concepts from notes.
+* **Control & Resilience:** Includes an in-app "Stop" button, copy-to-clipboard for responses, clear conversation modal, and a 20-second `AbortController` timeout safeguard.
+
+### ⏱️ 2. Persistent Pomodoro Focus Timer
+* **Uninterrupted Study Flow:** Runs continuously in the background across view switches.
+* **Dynamic Tab Countdown:** Displays active time left in the browser tab title.
+* **Task Tagging:** Input study topics (e.g. *Organic Chemistry*, *React Hooks*). Finished sessions automatically record into Recent Activity with exact durations.
+* **Audio Cues:** Web Audio API sound generator with harmonic arpeggio chimes. Includes a global mute/unmute control.
+* **Sidebar Mini-Player:** View remaining time and toggle pause/play from any screen in the dashboard.
+* **Configurable Intervals:** Adjust Focus, Short Break, and Long Break presets through an intuitive settings modal.
+
+### 📅 3. Consistency Habit Tracker
+* **Weekly Matrix:** Sunday-to-Saturday checklist with an active glowing ring around today's current day.
+* **Streaks & Progress:** Automatic streak calculation (`🔥 X-Day Streak`) and percentage completion bars.
+* **Categorization:** Tag habits under *Learning*, *Study*, *Health*, *Wellness*, or *Coding*.
+* **Custom Modals:** Modern dialogs for adding habits (frequency sliders, category picker) and confirming deletions.
+* **Behavioral Insights:** Smart habit-stacking guidance to build lasting academic routines.
+
+### 📊 4. Smart Analytics Dashboard
+* **Dynamic Metrics:** Live computation of Total Study Hours, Tasks Completed, Pomodoro Sprints, and Focus Benchmark Score.
+* **Interactive Chart:** Weekly distribution of study hours using Recharts, with smooth gradients, custom tooltips, and timeframe toggles (*This Week* vs. *Last Week*).
+* **Today's Habit Checklist:** Mark off habits directly from the overview card.
+* **Filterable Activity Feed:** Categorized history of focus sprints and completed milestones.
+
+---
+
+## 🛠️ Technology Stack & Libraries
+
+| Category | Technology | Usage |
+| :--- | :--- | :--- |
+| **Frontend Framework** | [React 18](https://react.dev/) | Component architecture, hooks, and context |
+| **Bundler & Dev Server** | [Vite 5](https://vitejs.dev/) | Ultra-fast HMR and production bundling |
+| **Styling** | [Tailwind CSS 3](https://tailwindcss.com/) | Dark glassmorphism, responsive grid, radial glows |
+| **AI Integration** | [Google Gemini API](https://ai.google.dev/) | Real-time generative study tutor via REST API |
+| **Animations** | [Framer Motion](https://www.framer.com/motion/) | Smooth layout transitions, tab springs, modals |
+| **Charts** | [Recharts](https://recharts.org/) | Responsive analytics and study consistency graphs |
+| **Audio** | Web Audio API | Client-side synthesized polyphonic chimes |
+| **Environment** | `dotenv` | Secure `.env` variable loading into Vite build |
+
+---
+
+## 📁 Project Directory Map
+
+```text
+STUDY-BUDDY/
+├── public/
+│   └── favicon.jpg             # Application favicon
+├── src/
+│   ├── components/
+│   │   ├── Button.jsx          # Reusable motion button component
+│   │   ├── Card.jsx            # Glassmorphic card container with hover physics
+│   │   ├── Icons.jsx           # SVG Heroicon icon library
+│   │   ├── Layout.jsx          # Main navigation, mobile drawer & mini-player
+│   │   └── ToastContainer.jsx   # Animated toast notification stack
+│   ├── context/
+│   │   └── StudyContext.jsx    # Global state management & localStorage sync
+│   ├── services/
+│   │   └── gemini.js           # Gemini API client, fallbacks & prompt utilities
+│   ├── utils/
+│   │   └── sound.js            # Web Audio API chime synthesis
+│   ├── views/
+│   │   ├── Home.jsx            # Landing view & tool showcase
+│   │   ├── Dashboard.jsx       # Study metrics, Recharts overview & quick-check
+│   │   ├── Pomodoro.jsx        # Circular timer ring, task tags & presets
+│   │   ├── Habits.jsx          # Weekly habit grid & streak tracking
+│   │   └── Chat.jsx            # AI StudyBot interface & active recall presets
+│   ├── App.jsx                 # Provider root & view switcher
+│   ├── index.css               # Tailwind directives, scrollbar & glass styles
+│   └── main.jsx                # React root mount point
+├── .env                        # Local API credentials (git-ignored)
+├── .gitignore                  # Prevents committing .env, node_modules, and dist
+├── index.html                  # HTML entry point with Inter font import
+├── package.json                # Project dependencies and run scripts
+├── tailwind.config.js          # Theme palette and font family extensions
+└── vite.config.js              # Vite config with dotenv & define definitions
+```
+
+---
+
+## 🚀 Quickstart & Installation
 
 ### Prerequisites
-* [Node.js](https://nodejs.org/) (version 18.0 or higher recommended)
+* [Node.js](https://nodejs.org/) (version 18 or higher)
 * [npm](https://www.npmjs.com/) or `pnpm`
 * A [Google Gemini API Key](https://aistudio.google.com/app/apikey)
 
-### 1. Clone the repository
+### Step 1: Clone the repository
 ```bash
 git clone https://github.com/your-username/study-buddy.git
 cd study-buddy
 ```
 
-### 2. Install dependencies
+### Step 2: Install dependencies
 ```bash
 npm install
 ```
 
-### 3. Configure your API key
-Create a `.env` file in the root directory (this file is excluded by `.gitignore` to keep your key secure):
+### Step 3: Configure environment variables
+Create a `.env` file in the root directory:
 ```env
-Gemini_api_key=your_actual_gemini_api_key_here
+Gemini_api_key=your_gemini_api_key_here
 ```
+> [!NOTE]
+> The `.env` file is excluded in `.gitignore` and is loaded securely through `dotenv` in `vite.config.js`. Your key is never hardcoded in the codebase.
 
-### 4. Start the development server
+### Step 4: Run the development server
 ```bash
 npm run dev
 ```
-Open your browser and navigate to `http://localhost:5173`.
+Open your browser and navigate to:
+```
+http://localhost:5173
+```
 
 ---
 
-## 🔒 Security & Environment Practices
+## 📦 Build & Deployment
 
-* **API Key Protection:** The Gemini API key is loaded exclusively from the `.env` file via `dotenv` in `vite.config.js` and is never hardcoded in version control.
-* **Git Safeguard:** `.gitignore` explicitly prevents `.env` and local environment files from being committed to Git.
-* **Client Isolation:** The application runs client-side with all state stored in your browser's `localStorage`.
+* **Generate production bundle:**
+  ```bash
+  npm run build
+  ```
+* **Preview production build locally:**
+  ```bash
+  npm run preview
+  ```
 
 ---
 
-## 📦 Production Build
+## 🔒 Security & Privacy
 
-To create an optimized production build:
-```bash
-npm run build
-```
-
-To preview the production build locally:
-```bash
-npm run preview
-```
+* **Zero-Leak API Key Handling:** The API key is loaded dynamically from `.env` using `dotenv` inside `vite.config.js` and defined securely for build-time compilation.
+* **Client-Side Data Storage:** All study metrics, timer logs, habit history, and chat messages are stored locally in your browser's `localStorage`—no personal data is sent to external databases.
+* **Git Safeguard:** Version control rules in `.gitignore` ensure credentials and build artifacts are never tracked.
 
 ---
 
 ## 📄 License
 
-This project is open-source and available under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE).
