@@ -26,7 +26,8 @@ const DashboardView = ({ setView }) => {
     activities, 
     completedSessionsCount, 
     habits, 
-    toggleHabitDay 
+    toggleHabitDay,
+    isMusicPlaying
   } = useStudy();
 
   const [timeframe, setTimeframe] = useState('This Week');
@@ -87,6 +88,20 @@ const DashboardView = ({ setView }) => {
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
             <span className="text-xs font-bold text-emerald-300">5-Day Active Streak 🔥</span>
           </div>
+
+          {setView && (
+            <button
+              onClick={() => setView('music')}
+              className={`px-3.5 py-2 rounded-2xl border text-xs font-bold transition-all flex items-center gap-1.5 ${
+                isMusicPlaying 
+                  ? 'bg-purple-900/40 border-purple-500/50 text-purple-200 shadow-lg shadow-purple-500/10' 
+                  : 'bg-slate-800/80 hover:bg-slate-700/80 border-slate-700 text-slate-300'
+              }`}
+            >
+              <Icons.Music className="w-4 h-4 text-purple-400" />
+              <span className="hidden sm:inline">{isMusicPlaying ? 'Audio Active' : 'Study Audio'}</span>
+            </button>
+          )}
 
           {setView && (
             <button

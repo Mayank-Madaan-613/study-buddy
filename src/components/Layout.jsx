@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from './Icons';
-import { useStudy } from '../context/StudyContext';
+import { useStudy, PRESETS } from '../context/StudyContext';
 import { ToastContainer } from './ToastContainer';
 
 const Layout = ({ children, view, setView }) => {
@@ -13,7 +13,11 @@ const Layout = ({ children, view, setView }) => {
     toggleTimer, 
     soundEnabled, 
     setSoundEnabled,
-    completedSessionsCount 
+    completedSessionsCount,
+    isMusicPlaying,
+    activePreset,
+    soundMixer,
+    stopAllMusic
   } = useStudy();
 
   const navItems = [
@@ -21,6 +25,7 @@ const Layout = ({ children, view, setView }) => {
     { id: 'dashboard', label: 'Dashboard', icon: Icons.Dashboard },
     { id: 'pomodoro', label: 'Focus Timer', icon: Icons.Timer },
     { id: 'habits', label: 'Habit Tracker', icon: Icons.Checklist },
+    { id: 'music', label: 'Study Audio', icon: Icons.Music },
     { id: 'chat', label: 'AI StudyBot', icon: Icons.Chat },
   ];
 
@@ -29,6 +34,14 @@ const Layout = ({ children, view, setView }) => {
     const s = secs % 60;
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
+
+  const activePresetObj = PRESETS.find(p => p.id === activePreset);
+  const activeSoundsCount = Object.values(soundMixer).filter(s => s.enabled).length;
+  const currentMusicLabel = activePresetObj
+    ? activePresetObj.title
+    : activeSoundsCount > 0
+    ? `${activeSoundsCount} Layer Mix`
+    : 'Study Audio';
 
   return (
     <div className="min-h-screen bg-[#0b0f19] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(99,102,241,0.15),rgba(255,255,255,0))] text-slate-100 flex overflow-hidden selection:bg-indigo-500/30">
@@ -66,13 +79,13 @@ const Layout = ({ children, view, setView }) => {
         </div>
         
         {/* Navigation list */}
-        <nav className="flex-1 px-3 py-6 space-y-1.5 overflow-y-auto w-full relative">
+        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto w-full relative">
           <div className="px-3 pb-2 text-[11px] font-bold tracking-wider uppercase text-slate-500">Navigation</div>
           {navItems.map((item) => (
             <button
               key={item.id}
               onClick={() => setView(item.id)}
-              className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl transition-all duration-200 relative group ${
+              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 relative group ${
                 view === item.id 
                   ? 'text-white font-semibold' 
                   : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
@@ -90,25 +103,63 @@ const Layout = ({ children, view, setView }) => {
                   view === item.id ? 'text-indigo-400' : 'text-slate-500 group-hover:text-slate-300'
                 }`} />
                 <span className="text-sm">{item.label}</span>
+                
                 {item.id === 'pomodoro' && isActive && (
                   <span className="ml-auto w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                )}
+
+                {item.id === 'music' && isMusicPlaying && (
+                  <span className="ml-auto flex items-center gap-0.5">
+                    <span className="w-1 h-2 bg-indigo-400 animate-pulse"></span>
+                    <span className="w-1 h-3.5 bg-teal-400 animate-pulse [animation-delay:0.2s]"></span>
+                    <span className="w-1 h-2 bg-indigo-400 animate-pulse [animation-delay:0.4s]"></span>
+                  </span>
                 )}
               </span>
             </button>
           ))}
         </nav>
 
-        {/* Mini Active Pomodoro Card in Sidebar (visible if timer is running or outside pomodoro view) */}
-        <div className="p-4 border-t border-slate-800/60 space-y-3">
+        {/* Sidebar Mini Controllers (Pomodoro + Music) */}
+        <div className="p-3 border-t border-slate-800/60 space-y-2">
+          {/* Active Ambient Music Mini-Controller */}
+          {isMusicPlaying && (
+            <div 
+              onClick={() => setView('music')}
+              className="p-3 rounded-2xl cursor-pointer transition-all border bg-indigo-950/40 border-indigo-500/40 hover:border-indigo-400/60 shadow-lg shadow-indigo-500/10"
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-semibold text-indigo-300 flex items-center gap-1.5 truncate">
+                  <Icons.Music className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                  <span className="truncate">{currentMusicLabel}</span>
+                </span>
+                <button 
+                  onClick={(e) => { e.stopPropagation(); stopAllMusic(); }}
+                  className="p-1 hover:text-white text-slate-400 transition-colors"
+                  title="Pause ambient audio"
+                >
+                  <Icons.Pause className="w-3.5 h-3.5 text-indigo-300 hover:text-white" />
+                </button>
+              </div>
+              <div className="flex items-center justify-between text-[11px] text-slate-400">
+                <span>Playing in background</span>
+                <span className="text-emerald-400 font-semibold flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Live
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Mini Active Pomodoro Card */}
           <div 
             onClick={() => setView('pomodoro')}
-            className={`p-3.5 rounded-2xl cursor-pointer transition-all border ${
+            className={`p-3 rounded-2xl cursor-pointer transition-all border ${
               isActive 
                 ? 'bg-indigo-950/40 border-indigo-500/40 hover:border-indigo-400/60 shadow-lg shadow-indigo-500/10' 
                 : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
             }`}
           >
-            <div className="flex items-center justify-between mb-1.5">
+            <div className="flex items-center justify-between mb-1">
               <span className="text-xs font-semibold text-slate-400 flex items-center gap-1.5">
                 <span className={`w-2 h-2 rounded-full ${isActive ? 'bg-emerald-400 animate-pulse' : 'bg-slate-500'}`}></span>
                 {mode === 'focus' ? 'Focus Session' : 'Break Time'}
@@ -118,15 +169,15 @@ const Layout = ({ children, view, setView }) => {
                 className="p-1 hover:text-white text-slate-400 transition-colors"
                 title={isActive ? "Pause timer" : "Start timer"}
               >
-                {isActive ? <Icons.Pause className="w-4 h-4 text-amber-400" /> : <Icons.Play className="w-4 h-4 text-emerald-400" />}
+                {isActive ? <Icons.Pause className="w-3.5 h-3.5 text-amber-400" /> : <Icons.Play className="w-3.5 h-3.5 text-emerald-400" />}
               </button>
             </div>
             <div className="flex items-baseline justify-between">
-              <span className="text-2xl font-black tracking-tight text-white tabular-nums">
+              <span className="text-xl font-black tracking-tight text-white tabular-nums">
                 {formatMinSec(timeLeft)}
               </span>
-              <span className="text-[11px] font-medium text-slate-400">
-                {completedSessionsCount} {completedSessionsCount === 1 ? 'sprint' : 'sprints'} done
+              <span className="text-[10px] font-medium text-slate-400">
+                {completedSessionsCount} {completedSessionsCount === 1 ? 'sprint' : 'sprints'}
               </span>
             </div>
           </div>
@@ -136,7 +187,7 @@ const Layout = ({ children, view, setView }) => {
       {/* Main Content Viewport */}
       <div className="flex-1 flex flex-col relative z-10 h-screen overflow-hidden">
         {/* Mobile Header */}
-        <header className="md:hidden glass-panel border-b border-slate-800/80 p-4 flex items-center justify-between sticky top-0 z-30">
+        <header className="md:hidden glass-panel border-b border-slate-800/80 p-3.5 flex items-center justify-between sticky top-0 z-30">
           <div onClick={() => setView('home')} className="flex items-center gap-2.5 cursor-pointer">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-teal-400 flex items-center justify-center text-white font-bold text-sm shadow-md">
               S
@@ -145,6 +196,21 @@ const Layout = ({ children, view, setView }) => {
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Music pill on mobile */}
+            {isMusicPlaying && (
+              <button
+                onClick={() => setView('music')}
+                className="px-2.5 py-1 bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-sm"
+              >
+                <Icons.Music className="w-3.5 h-3.5 text-indigo-400" />
+                <span className="flex items-center gap-0.5">
+                  <span className="w-0.5 h-2 bg-indigo-400 animate-pulse"></span>
+                  <span className="w-0.5 h-3 bg-teal-400 animate-pulse [animation-delay:0.2s]"></span>
+                </span>
+              </button>
+            )}
+
+            {/* Pomodoro timer pill on mobile */}
             {isActive && (
               <button 
                 onClick={() => setView('pomodoro')} 
@@ -158,7 +224,7 @@ const Layout = ({ children, view, setView }) => {
             <button 
               onClick={() => setSoundEnabled(!soundEnabled)} 
               className="p-2 text-slate-400 hover:text-white bg-slate-800/80 rounded-xl"
-              title="Toggle audio"
+              title="Toggle audio cues"
             >
               {soundEnabled ? <Icons.Volume className="w-4 h-4 text-indigo-400" /> : <Icons.VolumeX className="w-4 h-4" />}
             </button>
@@ -189,21 +255,26 @@ const Layout = ({ children, view, setView }) => {
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -20, opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="md:hidden glass-panel border-b border-slate-700/80 absolute top-[65px] left-0 w-full z-30 shadow-2xl overflow-hidden"
+                className="md:hidden glass-panel border-b border-slate-700/80 absolute top-[60px] left-0 w-full z-30 shadow-2xl overflow-hidden"
               >
                 <nav className="p-4 flex flex-col gap-1.5">
                   {navItems.map((item) => (
                     <button
                       key={item.id}
                       onClick={() => { setView(item.id); setMobileMenuOpen(false); }}
-                      className={`flex items-center gap-3 p-3.5 rounded-xl transition-all ${
+                      className={`flex items-center justify-between p-3.5 rounded-xl transition-all ${
                         view === item.id 
                           ? 'bg-indigo-600/20 border border-indigo-500/30 text-indigo-300 font-semibold' 
                           : 'text-slate-300 hover:bg-slate-800/50'
                       }`}
                     >
-                      <item.icon className="w-5 h-5" />
-                      <span className="text-sm">{item.label}</span>
+                      <div className="flex items-center gap-3">
+                        <item.icon className="w-5 h-5" />
+                        <span className="text-sm">{item.label}</span>
+                      </div>
+                      {item.id === 'music' && isMusicPlaying && (
+                        <span className="text-xs text-indigo-400 font-semibold">Playing 🎵</span>
+                      )}
                     </button>
                   ))}
                 </nav>

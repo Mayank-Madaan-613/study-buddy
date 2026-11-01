@@ -6,6 +6,7 @@ import DashboardView from './views/Dashboard';
 import PomodoroView from './views/Pomodoro';
 import HabitsView from './views/Habits';
 import ChatView from './views/Chat';
+import MusicView from './views/Music';
 
 const AppContent = () => {
   const [view, setView] = useState('home');
@@ -20,6 +21,8 @@ const AppContent = () => {
         return <PomodoroView />;
       case 'habits':
         return <HabitsView />;
+      case 'music':
+        return <MusicView />;
       case 'chat':
         return <ChatView />;
       default:

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { playTimerChime, playSuccessChime } from '../utils/sound';
+import { SoundEngine } from '../utils/ambientAudio';
 
 const StudyContext = createContext(null);
 
@@ -19,6 +20,59 @@ const DEFAULT_ACTIVITIES = [
   { id: 6, title: "Daily Habit: Exercise", type: "habit", time: "3 days ago" },
 ];
 
+const DEFAULT_MIXER = {
+  lofiChords: { enabled: false, volume: 0.6, name: 'Lo-Fi Jazz Chords', icon: 'Music' },
+  rain: { enabled: false, volume: 0.5, name: 'Gentle Rain', icon: 'CloudRain' },
+  campfire: { enabled: false, volume: 0.4, name: 'Crackling Fire', icon: 'Flame' },
+  waves: { enabled: false, volume: 0.45, name: 'Ocean Waves', icon: 'Waves' },
+  wind: { enabled: false, volume: 0.35, name: 'Forest Wind', icon: 'Wind' },
+  brownNoise: { enabled: false, volume: 0.5, name: 'Deep Brown Noise', icon: 'Headphones' },
+  binaural: { enabled: false, volume: 0.5, name: '14Hz Alpha Beats', icon: 'Disc' },
+};
+
+export const PRESETS = [
+  {
+    id: 'lofi_chill',
+    title: 'Lo-Fi Rain Lounge',
+    description: 'Mellow electric piano chords with soft rainfall',
+    icon: 'Music',
+    color: 'from-indigo-600 to-purple-600',
+    sounds: { lofiChords: 0.65, rain: 0.45 },
+  },
+  {
+    id: 'deep_focus',
+    title: 'Deep Alpha Flow',
+    description: '14Hz binaural beats with distraction-masking brown noise',
+    icon: 'Headphones',
+    color: 'from-blue-600 to-cyan-600',
+    sounds: { binaural: 0.6, brownNoise: 0.5 },
+  },
+  {
+    id: 'cozy_night',
+    title: 'Cozy Fireplace',
+    description: 'Warm fireplace crackles, steady rain & soothing chords',
+    icon: 'Flame',
+    color: 'from-amber-600 to-rose-600',
+    sounds: { campfire: 0.6, rain: 0.4, lofiChords: 0.4 },
+  },
+  {
+    id: 'ocean_retreat',
+    title: 'Ocean Horizon',
+    description: 'Slow ocean swells paired with calming alpha waves',
+    icon: 'Waves',
+    color: 'from-teal-600 to-emerald-600',
+    sounds: { waves: 0.65, binaural: 0.4 },
+  },
+  {
+    id: 'quiet_forest',
+    title: 'Forest Sanctuary',
+    description: 'Whispering pine trees with gentle rain & lo-fi vibes',
+    icon: 'Wind',
+    color: 'from-emerald-600 to-teal-700',
+    sounds: { wind: 0.5, rain: 0.35, lofiChords: 0.4 },
+  },
+];
+
 export const StudyProvider = ({ children }) => {
   // --- Toast Notification State ---
   const [toasts, setToasts] = useState([]);
@@ -34,7 +88,7 @@ export const StudyProvider = ({ children }) => {
     setToasts(prev => prev.filter(t => t.id !== id));
   };
 
-  // --- Sound Settings ---
+  // --- Sound Settings (Audio cues) ---
   const [soundEnabled, setSoundEnabled] = useState(() => {
     const saved = localStorage.getItem('study_sound_enabled');
     return saved !== null ? JSON.parse(saved) : true;
@@ -43,6 +97,112 @@ export const StudyProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem('study_sound_enabled', JSON.stringify(soundEnabled));
   }, [soundEnabled]);
+
+  // --- Ambient Music & Soundscape State ---
+  const [soundMixer, setSoundMixer] = useState(DEFAULT_MIXER);
+  const [masterVolume, setMasterVolume] = useState(0.8);
+  const [activePreset, setActivePreset] = useState(null);
+  const [sleepTimerMinutes, setSleepTimerMinutes] = useState(null);
+  const sleepTimerRef = useRef(null);
+
+  const isMusicPlaying = Object.values(soundMixer).some(s => s.enabled);
+
+  const toggleAmbientSound = (soundKey) => {
+    setSoundMixer(prev => {
+      const current = prev[soundKey];
+      const willEnable = !current.enabled;
+      SoundEngine.toggleSound(soundKey, willEnable, current.volume);
+      return {
+        ...prev,
+        [soundKey]: {
+          ...current,
+          enabled: willEnable,
+        }
+      };
+    });
+    setActivePreset(null);
+  };
+
+  const setAmbientVolume = (soundKey, vol) => {
+    const clamped = Math.max(0, Math.min(1, vol));
+    SoundEngine.setSoundVolume(soundKey, clamped);
+    setSoundMixer(prev => ({
+      ...prev,
+      [soundKey]: {
+        ...prev[soundKey],
+        volume: clamped,
+      }
+    }));
+  };
+
+  const setMasterMusicVolume = (vol) => {
+    const clamped = Math.max(0, Math.min(1, vol));
+    setMasterVolume(clamped);
+    SoundEngine.setMasterVolume(clamped);
+  };
+
+  const applyPreset = (presetId) => {
+    const preset = PRESETS.find(p => p.id === presetId);
+    if (!preset) return;
+
+    SoundEngine.stopAll();
+
+    setSoundMixer(prev => {
+      const nextMixer = {};
+      Object.keys(prev).forEach(key => {
+        const isPresetSound = Boolean(preset.sounds[key]);
+        const targetVol = isPresetSound ? preset.sounds[key] : prev[key].volume;
+        nextMixer[key] = {
+          ...prev[key],
+          enabled: isPresetSound,
+          volume: targetVol,
+        };
+        if (isPresetSound) {
+          SoundEngine.toggleSound(key, true, targetVol);
+        }
+      });
+      return nextMixer;
+    });
+
+    setActivePreset(presetId);
+    addToast(`Playing soundscape: ${preset.title} 🎧`, 'info');
+  };
+
+  const stopAllMusic = () => {
+    SoundEngine.stopAll();
+    setSoundMixer(prev => {
+      const next = {};
+      Object.keys(prev).forEach(k => {
+        next[k] = { ...prev[k], enabled: false };
+      });
+      return next;
+    });
+    setActivePreset(null);
+    if (sleepTimerRef.current) {
+      clearTimeout(sleepTimerRef.current);
+      sleepTimerRef.current = null;
+      setSleepTimerMinutes(null);
+    }
+  };
+
+  const setSleepTimer = (mins) => {
+    if (sleepTimerRef.current) {
+      clearTimeout(sleepTimerRef.current);
+      sleepTimerRef.current = null;
+    }
+    if (mins === null || mins === 0) {
+      setSleepTimerMinutes(null);
+      addToast("Sleep timer disabled", "info");
+      return;
+    }
+
+    setSleepTimerMinutes(mins);
+    addToast(`Sleep timer set: Audio will stop in ${mins} minutes`, 'info');
+    sleepTimerRef.current = setTimeout(() => {
+      stopAllMusic();
+      addToast("Sleep timer reached: Music stopped", "info");
+    }, mins * 60 * 1000);
+  };
 
   // --- Pomodoro Settings & State ---
   const [durations, setDurations] = useState(() => {
@@ -60,7 +220,6 @@ export const StudyProvider = ({ children }) => {
     return saved ? parseInt(saved, 10) : 0;
   });
 
-  // Track session timer accurately with background drift mitigation
   const endTimeRef = useRef(null);
 
   useEffect(() => {
@@ -71,7 +230,6 @@ export const StudyProvider = ({ children }) => {
     localStorage.setItem('study_completed_sessions', completedSessionsCount.toString());
   }, [completedSessionsCount]);
 
-  // Set mode handler
   const handleMode = (newMode) => {
     setMode(newMode);
     setIsActive(false);
@@ -122,7 +280,6 @@ export const StudyProvider = ({ children }) => {
     addToast("Timer durations updated", "info");
   };
 
-  // Timer interval
   useEffect(() => {
     let interval = null;
     if (isActive && timeLeft > 0) {
@@ -142,7 +299,6 @@ export const StudyProvider = ({ children }) => {
     return () => clearInterval(interval);
   }, [isActive, timeLeft]);
 
-  // Session completion logic
   const handleSessionCompletion = () => {
     if (soundEnabled) {
       playTimerChime();
@@ -154,7 +310,6 @@ export const StudyProvider = ({ children }) => {
       
       setCompletedSessionsCount(c => c + 1);
       
-      // Log to activities
       addActivity({
         title: sessionName,
         type: 'studying',
@@ -162,7 +317,6 @@ export const StudyProvider = ({ children }) => {
       });
 
       addToast(`🎉 Awesome! You completed "${sessionName}"! Take a well-deserved break.`, 'celebrate');
-      // Prompt switch to short break
       setMode('shortBreak');
       const breakSecs = (durations.shortBreak || 5) * 60;
       setTotalDuration(breakSecs);
@@ -176,7 +330,6 @@ export const StudyProvider = ({ children }) => {
     }
   };
 
-  // Update browser tab title
   useEffect(() => {
     const m = Math.floor(timeLeft / 60);
     const s = timeLeft % 60;
@@ -184,12 +337,14 @@ export const StudyProvider = ({ children }) => {
     
     if (isActive) {
       document.title = `(${timeFormatted}) ${mode === 'focus' ? '🎯 Focus' : '☕ Break'} | StudySpace`;
+    } else if (isMusicPlaying) {
+      document.title = `🎵 Playing Study Audio | StudySpace`;
     } else {
       document.title = 'StudySpace - Modern Productivity Dashboard';
     }
-  }, [timeLeft, isActive, mode]);
+  }, [timeLeft, isActive, mode, isMusicPlaying]);
 
-  // --- Habits State with LocalStorage Persistence ---
+  // --- Habits State ---
   const [habits, setHabits] = useState(() => {
     const saved = localStorage.getItem('study_buddy_habits');
     return saved ? JSON.parse(saved) : DEFAULT_HABITS;
@@ -210,13 +365,11 @@ export const StudyProvider = ({ children }) => {
         newHistory[dayIndex] = !newHistory[dayIndex];
         completedNow = newHistory[dayIndex];
         
-        // Calculate true current streak: consecutive completed days ending at most recent active day
         let streak = 0;
         for (let i = newHistory.length - 1; i >= 0; i--) {
           if (newHistory[i]) streak++;
-          else if (streak > 0) break; // streak broken
+          else if (streak > 0) break;
         }
-        // If streak is 0 but has completed days, fallback to completed count in current week
         const completedThisWeek = newHistory.filter(Boolean).length;
         const calculatedStreak = streak > 0 ? streak : completedThisWeek;
 
@@ -322,6 +475,19 @@ export const StudyProvider = ({ children }) => {
         soundEnabled,
         setSoundEnabled,
         
+        // Ambient Soundscape & Study Music
+        soundMixer,
+        masterVolume,
+        activePreset,
+        isMusicPlaying,
+        toggleAmbientSound,
+        setAmbientVolume,
+        setMasterMusicVolume,
+        applyPreset,
+        stopAllMusic,
+        sleepTimerMinutes,
+        setSleepTimer,
+        
         // Toasts
         toasts,
         addToast,
@@ -340,4 +506,3 @@ export const useStudy = () => {
   }
   return context;
 };
-

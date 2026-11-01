@@ -5,7 +5,7 @@ import { Icons } from '../components/Icons';
 import { useStudy } from '../context/StudyContext';
 
 const HomeView = ({ setView }) => {
-  const { totalStudyHours, habits, completedSessionsCount } = useStudy();
+  const { totalStudyHours, habits, completedSessionsCount, isMusicPlaying } = useStudy();
 
   const features = [
     { 
@@ -23,6 +23,14 @@ const HomeView = ({ setView }) => {
       icon: Icons.Timer, 
       color: "text-rose-400", 
       bg: "bg-rose-500/10 border-rose-500/20" 
+    },
+    { 
+      id: 'music',
+      title: "Study Audio & Lo-Fi", 
+      desc: "Procedural rain, campfire, alpha waves & lo-fi chords playing seamlessly in background.", 
+      icon: Icons.Music, 
+      color: "text-purple-400", 
+      bg: "bg-purple-500/10 border-purple-500/20" 
     },
     { 
       id: 'habits',
@@ -81,7 +89,7 @@ const HomeView = ({ setView }) => {
           transition={{ delay: 0.3 }}
           className="text-base sm:text-lg md:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed"
         >
-          Track habits, master your focus with intelligent Pomodoro intervals, and get instant guidance from your AI study tutor.
+          Track habits, master your focus with intelligent Pomodoro intervals, immerse in ambient soundscapes, and get instant guidance from your AI study tutor.
         </motion.p>
         
         <motion.div 
@@ -98,10 +106,11 @@ const HomeView = ({ setView }) => {
           </Button>
           <Button 
             variant="outline" 
-            onClick={() => setView('pomodoro')} 
-            className="px-8 py-3.5 text-base sm:text-lg rounded-2xl bg-slate-800/80 hover:bg-slate-700/80 border-slate-700 text-slate-200 font-semibold"
+            onClick={() => setView('music')} 
+            className="px-8 py-3.5 text-base sm:text-lg rounded-2xl bg-slate-800/80 hover:bg-slate-700/80 border-slate-700 text-slate-200 font-semibold flex items-center gap-2"
           >
-            Start Focus Timer
+            <Icons.Music className="w-5 h-5 text-indigo-400" />
+            {isMusicPlaying ? 'Now Playing 🎵' : 'Play Study Audio'}
           </Button>
         </motion.div>
 
@@ -110,7 +119,7 @@ const HomeView = ({ setView }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="pt-6 flex items-center justify-center gap-6 text-xs text-slate-400"
+          className="pt-6 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-400"
         >
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-indigo-400"></span>
@@ -124,17 +133,23 @@ const HomeView = ({ setView }) => {
             <span className="w-2 h-2 rounded-full bg-purple-400"></span>
             <span><strong className="text-white">{completedSessionsCount}</strong> Sprints Today</span>
           </div>
+          {isMusicPlaying && (
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span className="text-emerald-300 font-semibold">Soundscape Playing</span>
+            </div>
+          )}
         </motion.div>
       </motion.div>
 
       {/* Feature Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 w-full max-w-6xl mt-12 z-10 text-left">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 w-full max-w-6xl mt-12 z-10 text-left">
         {features.map((feature, i) => (
           <motion.div
             key={i}
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 + i * 0.1, type: "spring", stiffness: 120 }}
+            transition={{ delay: 0.3 + i * 0.08, type: "spring", stiffness: 120 }}
             whileHover={{ y: -6 }}
             onClick={() => setView(feature.id)}
             className="glass-panel p-6 rounded-3xl border border-slate-800 hover:border-indigo-500/40 transition-all shadow-xl hover:shadow-indigo-500/10 cursor-pointer flex flex-col justify-between group"
