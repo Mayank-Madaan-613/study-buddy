@@ -6,13 +6,14 @@
 ![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
 ![Google Gemini](https://img.shields.io/badge/Google_Gemini-3.5_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)
+![Web Audio](https://img.shields.io/badge/Web_Audio_API-Synthesized_Soundscapes-38bdf8?style=for-the-badge&logo=audio&logoColor=white)
 ![Framer Motion](https://img.shields.io/badge/Framer_Motion-11.0-FF0055?style=for-the-badge&logo=framer&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)
 
 <p align="center">
   <strong>An elegant, glassmorphic productivity dashboard designed to supercharge your study sessions.</strong>
   <br />
-  StudySpace unifies a science-backed focus timer, consistency-driven habit tracking, interactive progress analytics, and a real-time Gemini-powered AI Study Tutor into a single high-performance workspace.
+  StudySpace unifies a science-backed focus timer, ambient study soundscapes & lo-fi beats, consistency-driven habit tracking, interactive progress analytics, and a real-time Gemini-powered AI Study Tutor into a single high-performance workspace.
 </p>
 
 </div>
@@ -21,11 +22,14 @@
 
 ## 🌟 What's New in the Latest Release
 
+* 🎧 **Ambient Study Audio & Lo-Fi Soundscapes:** Dedicated music tab with 100% offline procedural ambient audio generators (Rain, Campfire, Ocean Waves, Forest Wind, Brown Noise, and 14Hz Alpha Binaural Beats) plus mellow electric piano jazz chords.
+* 🎚️ **Multi-Track Soundboard Mixer:** Layer multiple soundscapes simultaneously with independent volume faders (e.g. blend rain + campfire + lo-fi chords).
+* 🔄 **Persistent Audio Playback Across Views:** Audio runs in the background continuously while using the Pomodoro timer, Habit tracker, or AI chat, complete with a sidebar mini-player and sleep timer.
 * 🧠 **Live Gemini AI Tutor Integration:** Powered by Google's `gemini-3.5-flash` model with automatic fallback to `gemini-3.1-flash-lite` and `gemini-flash-latest`. Features multi-turn conversational memory and 4,096-token output support.
 * 🛠️ **One-Click Active Recall Tools:** Instant presets for generating 3-question quizzes, Feynman technique simplifications, 7-day revision plans, and summary notes.
 * ⏱️ **Persistent Background Focus Timer:** The timer runs in a global `StudyContext`—it never resets or interrupts when navigating between views.
 * 🔔 **Web Audio Harmonic Synthesizer:** Gentle, polyphonic marimba chimes synthesized via the Web Audio API upon timer completion and habit check-offs (100% offline, zero audio asset downloads).
-* 📑 **Live Browser Tab Countdown:** Dynamic document title updates with your active countdown (e.g. `(24:45) 🎯 Focus | StudySpace`).
+* 📑 **Live Browser Tab Countdown:** Dynamic document title updates with your active countdown (e.g. `(24:45) 🎯 Focus | StudySpace`) and playing status.
 * 🎨 **Interactive Glassmorphic Modals:** Replaced native browser `prompt()` and `confirm()` dialogs with custom Framer Motion modal windows.
 * 📊 **Smart Dashboard Quick-Actions:** Check off today's habits directly from the analytics dashboard and start focus sessions in one click.
 * 🍞 **Floating Toast Notifications:** Celebratory animated feedback toasts for completed sessions, goal milestones, and user actions.
@@ -47,14 +51,14 @@
         │  (Global State)   │               │   (gemini.js)     │
         └─────────┬─────────┘               └─────────┬─────────┘
                   │                                   │
-      ┌───────────┼───────────┐                       │
-      ▼           ▼           ▼                       ▼
- ┌─────────┐ ┌─────────┐ ┌─────────┐         ┌───────────────────┐
- │ Pomodoro│ │ Habits  │ │Activity │         │ Google Gemini API │
- │  Timer  │ │ Tracker │ │  Logs   │         │ (Multi-turn chat, │
- └────┬────┘ └────┬────┘ └────┬────┘         │  Study Utilities) │
-      │           │           │              └───────────────────┘
-      └───────────┼───────────┘
+      ┌───────────┼───────────┬───────────┐           │
+      ▼           ▼           ▼           ▼           ▼
+ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌───────────────────┐
+ │ Pomodoro│ │ Ambient │ │ Habits  │ │Activity │ │ Google Gemini API │
+ │  Timer  │ │ Audio   │ │ Tracker │ │  Logs   │ │ (Multi-turn chat, │
+ └────┬────┘ └────┬────┘ └────┬────┘ └────┬────┘ │  Study Utilities) │
+      │           │           │           │      └───────────────────┘
+      └───────────┼───────────┴───────────┘
                   ▼
        ┌─────────────────────┐
        │ Browser LocalStorage│
@@ -66,7 +70,22 @@
 
 ## ✨ Comprehensive Feature Matrix
 
-### 💬 1. AI StudyBot (Google Gemini Powered)
+### 🎧 1. Study Audio & Ambient Soundscapes
+* **100% Offline Procedural Sound Engine:** Synthesizes natural acoustics and musical frequencies via the Web Audio API without needing external audio downloads.
+* **Ambient Sound Channels:**
+  * 🎹 **Lo-Fi Jazz Chords:** Generative mellow electric piano progressions with soft tape flutter.
+  * 🌧️ **Gentle Rain:** Calming pink noise filtered to simulate raindrops.
+  * 🔥 **Crackling Fire:** Warm low-frequency rumble with randomized micro-pops.
+  * 🌊 **Ocean Waves:** LFO-modulated tidal swells.
+  * 🍃 **Forest Wind:** Resonant bandpass breeze through trees.
+  * 🎧 **Deep Brown Noise:** Distraction-masking frequency ideal for deep work and ADHD focus.
+  * 🧠 **14Hz Alpha Beats:** Dual-frequency stereo binaural beats to induce cognitive flow state.
+* **Curated 1-Click Presets:** *Lo-Fi Rain Lounge*, *Deep Alpha Flow*, *Cozy Fireplace*, *Ocean Horizon*, and *Forest Sanctuary*.
+* **Multi-Sound Mixer Board:** Adjust individual channel faders and master volume simultaneously.
+* **Background Continuity:** Never stops when switching to the Timer, Habits, or AI Chat tabs.
+* **Sleep / Study Timer:** Automatically stop music after 15, 25, or 45 minutes.
+
+### 💬 2. AI StudyBot (Google Gemini Powered)
 * **Pedagogical Instruction System:** Tuned with custom study-partner system instructions to deliver step-by-step guidance, analogies, and active recall tests.
 * **Non-Lossy Markdown Engine:** Full custom parsing for multi-line code blocks (` ``` `), numbered question sequences (`1. `), bullet points, and inline styling without dropped text.
 * **Active Recall Utilities:**
@@ -76,7 +95,7 @@
   * 📝 **Key Summary:** Extracts high-yield formulas and concepts from notes.
 * **Control & Resilience:** Includes an in-app "Stop" button, copy-to-clipboard for responses, clear conversation modal, and a 20-second `AbortController` timeout safeguard.
 
-### ⏱️ 2. Persistent Pomodoro Focus Timer
+### ⏱️ 3. Persistent Pomodoro Focus Timer
 * **Uninterrupted Study Flow:** Runs continuously in the background across view switches.
 * **Dynamic Tab Countdown:** Displays active time left in the browser tab title.
 * **Task Tagging:** Input study topics (e.g. *Organic Chemistry*, *React Hooks*). Finished sessions automatically record into Recent Activity with exact durations.
@@ -84,14 +103,14 @@
 * **Sidebar Mini-Player:** View remaining time and toggle pause/play from any screen in the dashboard.
 * **Configurable Intervals:** Adjust Focus, Short Break, and Long Break presets through an intuitive settings modal.
 
-### 📅 3. Consistency Habit Tracker
+### 📅 4. Consistency Habit Tracker
 * **Weekly Matrix:** Sunday-to-Saturday checklist with an active glowing ring around today's current day.
 * **Streaks & Progress:** Automatic streak calculation (`🔥 X-Day Streak`) and percentage completion bars.
 * **Categorization:** Tag habits under *Learning*, *Study*, *Health*, *Wellness*, or *Coding*.
 * **Custom Modals:** Modern dialogs for adding habits (frequency sliders, category picker) and confirming deletions.
 * **Behavioral Insights:** Smart habit-stacking guidance to build lasting academic routines.
 
-### 📊 4. Smart Analytics Dashboard
+### 📊 5. Smart Analytics Dashboard
 * **Dynamic Metrics:** Live computation of Total Study Hours, Tasks Completed, Pomodoro Sprints, and Focus Benchmark Score.
 * **Interactive Chart:** Weekly distribution of study hours using Recharts, with smooth gradients, custom tooltips, and timeframe toggles (*This Week* vs. *Last Week*).
 * **Today's Habit Checklist:** Mark off habits directly from the overview card.
@@ -107,9 +126,9 @@
 | **Bundler & Dev Server** | [Vite 5](https://vitejs.dev/) | Ultra-fast HMR and production bundling |
 | **Styling** | [Tailwind CSS 3](https://tailwindcss.com/) | Dark glassmorphism, responsive grid, radial glows |
 | **AI Integration** | [Google Gemini API](https://ai.google.dev/) | Real-time generative study tutor via REST API |
+| **Audio Synthesis** | Web Audio API | Ambient soundscapes, binaural beats, and notification chimes |
 | **Animations** | [Framer Motion](https://www.framer.com/motion/) | Smooth layout transitions, tab springs, modals |
 | **Charts** | [Recharts](https://recharts.org/) | Responsive analytics and study consistency graphs |
-| **Audio** | Web Audio API | Client-side synthesized polyphonic chimes |
 | **Environment** | `dotenv` | Secure `.env` variable loading into Vite build |
 
 ---
@@ -125,19 +144,21 @@ STUDY-BUDDY/
 │   │   ├── Button.jsx          # Reusable motion button component
 │   │   ├── Card.jsx            # Glassmorphic card container with hover physics
 │   │   ├── Icons.jsx           # SVG Heroicon icon library
-│   │   ├── Layout.jsx          # Main navigation, mobile drawer & mini-player
+│   │   ├── Layout.jsx          # Main navigation, mobile drawer & mini-players
 │   │   └── ToastContainer.jsx   # Animated toast notification stack
 │   ├── context/
-│   │   └── StudyContext.jsx    # Global state management & localStorage sync
+│   │   └── StudyContext.jsx    # Global state management & audio/timer sync
 │   ├── services/
 │   │   └── gemini.js           # Gemini API client, fallbacks & prompt utilities
 │   ├── utils/
+│   │   ├── ambientAudio.js     # Procedural soundscape & lo-fi chord engine
 │   │   └── sound.js            # Web Audio API chime synthesis
 │   ├── views/
 │   │   ├── Home.jsx            # Landing view & tool showcase
 │   │   ├── Dashboard.jsx       # Study metrics, Recharts overview & quick-check
 │   │   ├── Pomodoro.jsx        # Circular timer ring, task tags & presets
 │   │   ├── Habits.jsx          # Weekly habit grid & streak tracking
+│   │   ├── Music.jsx           # Study soundscapes, binaural beats & mixer
 │   │   └── Chat.jsx            # AI StudyBot interface & active recall presets
 │   ├── App.jsx                 # Provider root & view switcher
 │   ├── index.css               # Tailwind directives, scrollbar & glass styles
