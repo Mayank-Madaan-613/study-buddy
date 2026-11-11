@@ -173,6 +173,8 @@ STUDY-BUDDY/
 
 ---
 
+## Visit the live website: https://study-buddy-m2f7.vercel.app/
+
 ## 🚀 Quickstart & Installation
 
 ### Prerequisites
