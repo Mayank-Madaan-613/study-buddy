@@ -2,13 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===================== CSS Theme Variables ===================== */
+:root {
+  /* Light mode defaults */
+  --bg-base:        #f0f4ff;
+  --bg-gradient:    radial-gradient(ellipse 80% 80% at 50% -20%, rgba(99,102,241,0.12), rgba(255,255,255,0));
+  --text-base:      #1e293b;
+  --text-muted:     #64748b;
+  --glass-bg:       rgba(255, 255, 255, 0.70);
+  --glass-border:   rgba(99, 102, 241, 0.15);
+  --glass-glow-bg:  rgba(255, 255, 255, 0.75);
+  --glass-glow-bdr: rgba(99, 102, 241, 0.25);
+  --scrollbar-thumb:#cbd5e1;
+  --scrollbar-hover:#94a3b8;
+  --sidebar-bg:     rgba(255, 255, 255, 0.80);
+  --card-bg:        rgba(241, 245, 255, 0.85);
+}
+
+/* Dark mode overrides applied when <html class="dark"> */
+html.dark {
+  --bg-base:        #0b0f19;
+  --bg-gradient:    radial-gradient(ellipse 80% 80% at 50% -20%, rgba(99,102,241,0.15), rgba(255,255,255,0));
+  --text-base:      #f1f5f9;
+  --text-muted:     #94a3b8;
+  --glass-bg:       rgba(15, 23, 42, 0.65);
+  --glass-border:   rgba(255, 255, 255, 0.08);
+  --glass-glow-bg:  rgba(15, 23, 42, 0.70);
+  --glass-glow-bdr: rgba(99, 102, 241, 0.20);
+  --scrollbar-thumb:#334155;
+  --scrollbar-hover:#475569;
+  --sidebar-bg:     rgba(15, 23, 42, 0.65);
+  --card-bg:        rgba(15, 23, 42, 0.65);
+}
+
 html, body {
-  background-color: #0b0f19;
-  color: #f1f5f9;
+  background-color: var(--bg-base);
+  color: var(--text-base);
   font-family: 'Inter', sans-serif;
   overflow: hidden;
   height: 100%;
   width: 100%;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Custom scrollbar */
@@ -20,34 +54,82 @@ html, body {
   background: transparent; 
 }
 ::-webkit-scrollbar-thumb {
-  background: #334155; 
+  background: var(--scrollbar-thumb); 
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569; 
+  background: var(--scrollbar-hover); 
 }
 
-/* Glassmorphism helpers */
+/* ===================== Glassmorphism ===================== */
 .glass-panel {
-  background: rgba(15, 23, 42, 0.65);
+  background: var(--glass-bg);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 .glass-panel-glow {
-  background: rgba(15, 23, 42, 0.7);
+  background: var(--glass-glow-bg);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  border: 1px solid var(--glass-glow-bdr);
   box-shadow: 0 0 25px -5px rgba(99, 102, 241, 0.15);
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 
-/* Hide scrollbar utility */
+/* ===================== Light mode text overrides ===================== */
+/* Recolour Tailwind's hardcoded slate-* classes in light mode */
+html:not(.dark) .text-slate-100,
+html:not(.dark) .text-white {
+  color: #1e293b !important;
+}
+html:not(.dark) .text-slate-200 {
+  color: #334155 !important;
+}
+html:not(.dark) .text-slate-300 {
+  color: #475569 !important;
+}
+html:not(.dark) .text-slate-400 {
+  color: #64748b !important;
+}
+html:not(.dark) .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+/* Light mode backgrounds for slate-* utility classes */
+html:not(.dark) .bg-\[\#0b0f19\],
+html:not(.dark) .bg-slate-900,
+html:not(.dark) .bg-slate-900\/60 {
+  background-color: #f0f4ff !important;
+}
+html:not(.dark) .bg-slate-800,
+html:not(.dark) .bg-slate-800\/40,
+html:not(.dark) .bg-slate-800\/60,
+html:not(.dark) .bg-slate-800\/80 {
+  background-color: rgba(226, 232, 255, 0.70) !important;
+}
+html:not(.dark) .border-slate-800,
+html:not(.dark) .border-slate-800\/60,
+html:not(.dark) .border-slate-800\/80 {
+  border-color: rgba(99, 102, 241, 0.18) !important;
+}
+html:not(.dark) .border-slate-700 {
+  border-color: rgba(99, 102, 241, 0.25) !important;
+}
+
+/* Keep ambient blobs subtle in light mode */
+html:not(.dark) [class*="bg-indigo-600/15"],
+html:not(.dark) [class*="bg-teal-500/15"] {
+  opacity: 0.4;
+}
+
+/* ===================== Hide scrollbar utility ===================== */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 .no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

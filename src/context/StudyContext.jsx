@@ -88,6 +88,30 @@ export const StudyProvider = ({ children }) => {
     setToasts(prev => prev.filter(t => t.id !== id));
   };
 
+  // --- Theme (dark/light mode) ---
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem('study_theme');
+    return saved ? saved : 'dark';
+  });
+
+  const toggleTheme = () => {
+    setTheme(prev => {
+      const next = prev === 'light' ? 'dark' : 'light';
+      localStorage.setItem('study_theme', next);
+      return next;
+    });
+  };
+
+  // Apply theme class to html element
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [theme]);
+
   // --- Sound Settings (Audio cues) ---
   const [soundEnabled, setSoundEnabled] = useState(() => {
     const saved = localStorage.getItem('study_sound_enabled');
@@ -474,6 +498,9 @@ export const StudyProvider = ({ children }) => {
         // Settings & Sound
         soundEnabled,
         setSoundEnabled,
+        // Theme
+        theme,
+        toggleTheme,
         
         // Ambient Soundscape & Study Music
         soundMixer,

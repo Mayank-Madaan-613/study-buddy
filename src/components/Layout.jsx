@@ -17,7 +17,9 @@ const Layout = ({ children, view, setView }) => {
     isMusicPlaying,
     activePreset,
     soundMixer,
-    stopAllMusic
+    stopAllMusic,
+    theme,
+    toggleTheme,
   } = useStudy();
 
   const navItems = [
@@ -44,7 +46,7 @@ const Layout = ({ children, view, setView }) => {
     : 'Study Audio';
 
   return (
-    <div className="min-h-screen bg-[#0b0f19] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(99,102,241,0.15),rgba(255,255,255,0))] text-slate-100 flex overflow-hidden selection:bg-indigo-500/30">
+    <div style={{ backgroundColor: 'var(--bg-base)', backgroundImage: 'var(--bg-gradient)', color: 'var(--text-base)' }} className="min-h-screen text-slate-100 flex overflow-hidden selection:bg-indigo-500/30 transition-colors duration-300">
       {/* Background ambient lighting */}
       <div className="fixed top-[-15%] left-[-10%] w-[50%] h-[50%] bg-indigo-600/15 rounded-full blur-[140px] pointer-events-none"></div>
       <div className="fixed bottom-[-15%] right-[-10%] w-[50%] h-[50%] bg-teal-500/15 rounded-full blur-[140px] pointer-events-none"></div>
@@ -67,6 +69,17 @@ const Layout = ({ children, view, setView }) => {
               <p className="text-[10px] tracking-wider uppercase font-semibold text-indigo-400">AI Productivity</p>
             </div>
           </div>
+
+          {/* Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 text-slate-400 hover:text-slate-200 rounded-lg hover:bg-slate-800/60 transition-colors"
+            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          >
+            {theme === 'dark'
+              ? <Icons.Sun className="w-4 h-4 text-yellow-400" />
+              : <Icons.Moon className="w-4 h-4 text-indigo-400" />}
+          </button>
 
           {/* Sound Toggle */}
           <button
@@ -220,6 +233,16 @@ const Layout = ({ children, view, setView }) => {
                 {formatMinSec(timeLeft)}
               </button>
             )}
+
+            <button 
+              onClick={toggleTheme}
+              className="p-2 text-slate-400 hover:text-white bg-slate-800/80 rounded-xl"
+              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+              {theme === 'dark'
+                ? <Icons.Sun className="w-4 h-4 text-yellow-400" />
+                : <Icons.Moon className="w-4 h-4 text-indigo-400" />}
+            </button>
 
             <button 
               onClick={() => setSoundEnabled(!soundEnabled)} 
