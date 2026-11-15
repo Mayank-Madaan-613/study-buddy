@@ -5,15 +5,18 @@
 ![React](https://img.shields.io/badge/React-18.2.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Dark & Light Mode](https://img.shields.io/badge/Theme-Dark%20%7C%20Light-8B5CF6?style=for-the-badge&logo=shadow&logoColor=white)
 ![Google Gemini](https://img.shields.io/badge/Google_Gemini-3.5_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)
 ![Web Audio](https://img.shields.io/badge/Web_Audio_API-Synthesized_Soundscapes-38bdf8?style=for-the-badge&logo=audio&logoColor=white)
 ![Framer Motion](https://img.shields.io/badge/Framer_Motion-11.0-FF0055?style=for-the-badge&logo=framer&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)
 
 <p align="center">
-  <strong>An elegant, glassmorphic productivity dashboard designed to supercharge your study sessions.</strong>
+  <strong>An elegant productivity dashboard designed to supercharge your study sessions.</strong>
   <br />
-  StudySpace unifies a science-backed focus timer, ambient study soundscapes & lo-fi beats, consistency-driven habit tracking, interactive progress analytics, and a real-time Gemini-powered AI Study Tutor into a single high-performance workspace.
+  StudySpace unifies a science-backed focus timer, ambient study soundscapes & lo-fi beats, consistency-driven habit tracking, interactive progress analytics, full dark & light mode personalization, and a real-time Gemini-powered AI Study Tutor into a single high-performance workspace.
+  <br /><br />
+  <a href="https://study-buddy-m2f7.vercel.app/" target="_blank"><strong>🚀 Explore Live Deployment »</strong></a>
 </p>
 
 </div>
@@ -22,6 +25,9 @@
 
 ## 🌟 What's New in the Latest Release
 
+* 🌓 **Dynamic Dark & Light Theme Engine:** One-click instant theme toggle in desktop and mobile headers with synchronized CSS variables, smooth 300ms transitions, and persistent storage in `localStorage`. Default dark mode with an elegant, glare-free light mode.
+* 🔍 **On-Page SEO & Structured Metadata:** Complete on-page search engine optimization with Open Graph cards, Twitter metadata, Canonical URL, SoftwareApplication & WebSite JSON-LD structured schema, and a dedicated `sitemap.xml` for indexability.
+* 📱 **Full Mobile Optimization:** Fluid responsive layouts for small screens, featuring collapsible navigation drawers, mobile-friendly audio and timer pills, and responsive touch controls.
 * 🎧 **Ambient Study Audio & Lo-Fi Soundscapes:** Dedicated music tab with 100% offline procedural ambient audio generators (Rain, Campfire, Ocean Waves, Forest Wind, Brown Noise, and 14Hz Alpha Binaural Beats) plus mellow electric piano jazz chords.
 * 🎚️ **Multi-Track Soundboard Mixer:** Layer multiple soundscapes simultaneously with independent volume faders (e.g. blend rain + campfire + lo-fi chords).
 * 🔄 **Persistent Audio Playback Across Views:** Audio runs in the background continuously while using the Pomodoro timer, Habit tracker, or AI chat, complete with a sidebar mini-player and sleep timer.
@@ -116,6 +122,16 @@
 * **Today's Habit Checklist:** Mark off habits directly from the overview card.
 * **Filterable Activity Feed:** Categorized history of focus sprints and completed milestones.
 
+### 🎨 6. Dark & Light Theme Architecture
+* **Theme Switching Engine:** Easily switch between deep glassmorphic dark mode and a crisp, high-contrast light mode using the header sun/moon button.
+* **CSS Variable Driven:** Powered by custom root CSS properties (`--bg-base`, `--glass-bg`, `--text-base`, `--scrollbar-thumb`) ensuring instantaneous, glitch-free re-styling.
+* **Auto-Persistence:** Preserves user theme preference across browser sessions using `localStorage`.
+
+### 🌐 7. SEO & Search Engine Optimization
+* **Structured Data (JSON-LD):** Implements `WebSite` and `SoftwareApplication` schema for Google search rich snippets and enhanced indexing.
+* **Social Previews:** Integrated Open Graph (`og:*`) and Twitter Card meta tags for previews on Discord, Twitter/X, LinkedIn, and messaging apps.
+* **XML Sitemap:** Included `sitemap.xml` listing primary app entry points and routes for fast crawler discovery.
+
 ---
 
 ## 🛠️ Technology Stack & Libraries
@@ -165,7 +181,8 @@ STUDY-BUDDY/
 │   └── main.jsx                # React root mount point
 ├── .env                        # Local API credentials (git-ignored)
 ├── .gitignore                  # Prevents committing .env, node_modules, and dist
-├── index.html                  # HTML entry point with Inter font import
+├── index.html                  # HTML entry point with SEO meta & JSON-LD
+├── sitemap.xml                 # XML sitemap for search engine crawlers
 ├── package.json                # Project dependencies and run scripts
 ├── tailwind.config.js          # Theme palette and font family extensions
 └── vite.config.js              # Vite config with dotenv & define definitions
@@ -173,7 +190,12 @@ STUDY-BUDDY/
 
 ---
 
-## Visit the live website: https://study-buddy-m2f7.vercel.app/
+## 🌐 Live Deployment
+
+Try out the live web application on Vercel:
+👉 **[https://study-buddy-m2f7.vercel.app/](https://study-buddy-m2f7.vercel.app/)**
+
+---
 
 ## 🚀 Quickstart & Installation
 
