@@ -25,6 +25,7 @@
 
 ## 🌟 What's New in the Latest Release
 
+* 🔔 **Native Desktop Browser Notifications:** Real-time system notifications for Pomodoro timer intervals. Receive instant desktop/system banners when focus sprints or break intervals complete, even when switching to another browser tab or reading PDFs in another window. Includes one-click permission toggle in Pomodoro view and settings modal.
 * 🌓 **Dynamic Dark & Light Theme Engine:** One-click instant theme toggle in desktop and mobile headers with synchronized CSS variables, smooth 300ms transitions, and persistent storage in `localStorage`. Default dark mode with an elegant, glare-free light mode.
 * 🔍 **On-Page SEO & Structured Metadata:** Complete on-page search engine optimization with Open Graph cards, Twitter metadata, Canonical URL, SoftwareApplication & WebSite JSON-LD structured schema, and a dedicated `sitemap.xml` for indexability.
 * 📱 **Full Mobile Optimization:** Fluid responsive layouts for small screens, featuring collapsible navigation drawers, mobile-friendly audio and timer pills, and responsive touch controls.
@@ -103,6 +104,7 @@
 
 ### ⏱️ 3. Persistent Pomodoro Focus Timer
 * **Uninterrupted Study Flow:** Runs continuously in the background across view switches.
+* **Native Desktop Notifications:** Browser HTML5 alerts notify you the moment a study sprint or break interval finishes, even when the browser is minimized or running in the background.
 * **Dynamic Tab Countdown:** Displays active time left in the browser tab title.
 * **Task Tagging:** Input study topics (e.g. *Organic Chemistry*, *React Hooks*). Finished sessions automatically record into Recent Activity with exact durations.
 * **Audio Cues:** Web Audio API sound generator with harmonic arpeggio chimes. Includes a global mute/unmute control.
