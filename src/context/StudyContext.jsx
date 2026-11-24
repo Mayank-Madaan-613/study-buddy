@@ -122,6 +122,66 @@ export const StudyProvider = ({ children }) => {
     localStorage.setItem('study_sound_enabled', JSON.stringify(soundEnabled));
   }, [soundEnabled]);
 
+  // --- Browser Desktop Notification Settings ---
+  const [notificationsEnabled, setNotificationsEnabled] = useState(() => {
+    const saved = localStorage.getItem('study_notifications_enabled');
+    return saved !== null ? JSON.parse(saved) : false;
+  });
+
+  const requestNotificationPermission = async () => {
+    if (!('Notification' in window)) {
+      addToast('Browser notifications are not supported on this device', 'error');
+      return false;
+    }
+
+    if (Notification.permission === 'granted') {
+      const next = !notificationsEnabled;
+      setNotificationsEnabled(next);
+      localStorage.setItem('study_notifications_enabled', JSON.stringify(next));
+      addToast(next ? 'Desktop notifications enabled! 🔔' : 'Desktop notifications disabled 🔕', 'info');
+      return next;
+    }
+
+    if (Notification.permission !== 'denied') {
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        setNotificationsEnabled(true);
+        localStorage.setItem('study_notifications_enabled', JSON.stringify(true));
+        addToast('Desktop notifications enabled! 🔔', 'success');
+        try {
+          new Notification('StudySpace Notifications Active', {
+            body: 'You will receive notifications when Pomodoro focus and break intervals finish!',
+            icon: '/favicon.jpg'
+          });
+        } catch (_) {}
+        return true;
+      } else {
+        setNotificationsEnabled(false);
+        localStorage.setItem('study_notifications_enabled', JSON.stringify(false));
+        addToast('Notification permission was dismissed or blocked', 'info');
+        return false;
+      }
+    } else {
+      addToast('Notifications are blocked in your browser settings. Please enable them to get timer alerts.', 'info');
+      return false;
+    }
+  };
+
+  const sendBrowserNotification = (title, body) => {
+    if (!notificationsEnabled || !('Notification' in window) || Notification.permission !== 'granted') {
+      return;
+    }
+    try {
+      new Notification(title, {
+        body,
+        icon: '/favicon.jpg',
+        badge: '/favicon.jpg',
+        tag: 'pomodoro-alert',
+        renotify: true
+      });
+    } catch (_) {}
+  };
+
   // --- Ambient Music & Soundscape State ---
   const [soundMixer, setSoundMixer] = useState(DEFAULT_MIXER);
   const [masterVolume, setMasterVolume] = useState(0.8);
@@ -341,12 +401,14 @@ export const StudyProvider = ({ children }) => {
       });
 
       addToast(`🎉 Awesome! You completed "${sessionName}"! Take a well-deserved break.`, 'celebrate');
+      sendBrowserNotification('🎉 Focus Session Completed!', `Great job on "${sessionName}"! Take a ${durations.shortBreak || 5}-minute break.`);
       setMode('shortBreak');
       const breakSecs = (durations.shortBreak || 5) * 60;
       setTotalDuration(breakSecs);
       setTimeLeft(breakSecs);
     } else {
       addToast("☕ Break is over! Ready for another focused sprint?", 'info');
+      sendBrowserNotification('☕ Break Completed!', 'Time to dive back into your focused study sprint!');
       setMode('focus');
       const focusSecs = (durations.focus || 25) * 60;
       setTotalDuration(focusSecs);
@@ -498,6 +560,8 @@ export const StudyProvider = ({ children }) => {
         // Settings & Sound
         soundEnabled,
         setSoundEnabled,
+        notificationsEnabled,
+        requestNotificationPermission,
         // Theme
         theme,
         toggleTheme,

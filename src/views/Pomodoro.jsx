@@ -18,7 +18,9 @@ const PomodoroView = () => {
     addTime,
     durations,
     updateDurations,
-    completedSessionsCount
+    completedSessionsCount,
+    notificationsEnabled,
+    requestNotificationPermission
   } = useStudy();
 
   const [showSettings, setShowSettings] = useState(false);
@@ -58,17 +60,38 @@ const PomodoroView = () => {
           <p className="text-slate-400 text-sm mt-1">Science-backed intervals to sustain deep focus.</p>
         </div>
 
-        <button
-          onClick={() => {
-            setTempDurations(durations);
-            setShowSettings(true);
-          }}
-          className="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 hover:text-white border border-slate-700 transition-all flex items-center gap-2 text-sm font-medium"
-          title="Timer Settings"
-        >
-          <Icons.Settings className="w-4 h-4 text-indigo-400" />
-          <span className="hidden sm:inline">Settings</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={requestNotificationPermission}
+            className={`p-2.5 rounded-xl border transition-all flex items-center gap-2 text-sm font-medium ${
+              notificationsEnabled
+                ? 'bg-indigo-600/20 border-indigo-500/40 text-indigo-300 hover:bg-indigo-600/30'
+                : 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-400 hover:text-slate-200 border-slate-700'
+            }`}
+            title={notificationsEnabled ? "Desktop notifications enabled (click to toggle)" : "Enable desktop notifications"}
+          >
+            {notificationsEnabled ? (
+              <Icons.Bell className="w-4 h-4 text-indigo-400 animate-pulse" />
+            ) : (
+              <Icons.BellOff className="w-4 h-4 text-slate-400" />
+            )}
+            <span className="hidden sm:inline">
+              {notificationsEnabled ? "Alerts On" : "Enable Alerts"}
+            </span>
+          </button>
+
+          <button
+            onClick={() => {
+              setTempDurations(durations);
+              setShowSettings(true);
+            }}
+            className="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 hover:text-white border border-slate-700 transition-all flex items-center gap-2 text-sm font-medium"
+            title="Timer Settings"
+          >
+            <Icons.Settings className="w-4 h-4 text-indigo-400" />
+            <span className="hidden sm:inline">Settings</span>
+          </button>
+        </div>
       </div>
 
       {/* Mode Presets */}
@@ -307,6 +330,26 @@ const PomodoroView = () => {
                     className="w-full bg-slate-800/80 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500"
                     required
                   />
+                </div>
+
+                <div className="pt-2 border-t border-slate-800">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs font-semibold text-slate-200">Desktop Notifications</p>
+                      <p className="text-[11px] text-slate-400">Alerts when focus and break intervals end</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={requestNotificationPermission}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
+                        notificationsEnabled
+                          ? 'bg-indigo-600/25 border-indigo-500/40 text-indigo-300'
+                          : 'bg-slate-800 border-slate-700 text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      {notificationsEnabled ? 'Enabled ✓' : 'Enable'}
+                    </button>
+                  </div>
                 </div>
 
                 <div className="flex justify-end gap-3 pt-4">
